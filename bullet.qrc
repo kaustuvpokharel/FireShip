@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bullet.qml</file>
+    </qresource>
+</RCC>
