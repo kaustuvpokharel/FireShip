@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>bullet.qml</file>
+        <file>Enemy.qml</file>
     </qresource>
 </RCC>

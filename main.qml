@@ -34,7 +34,18 @@ Window {
                            {
                                 control.fireBullet();
                            }
-
                        }
+    }
+
+    Repeater
+    {
+        model: control.bullets
+        delegate: Bullet{}
+    }
+
+    Repeater
+    {
+        model: control.enemies
+        delegate: Enemy{}
     }
 }

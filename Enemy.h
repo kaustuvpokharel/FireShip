@@ -1,19 +1,17 @@
-#ifndef BULLET_H
-#define BULLET_H
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include <QObject>
 #include <QTimer>
 #include <QList>
 
-class Controller;
-
-class Bullet: public QObject
+class Enemy: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(double y READ y WRITE setY NOTIFY yChanged)
 public:
-    Bullet(Controller* controller, QObject* parent = nullptr);
+    Enemy(QObject* parent = nullptr);
 
     double x()
     {
@@ -43,17 +41,17 @@ public:
     }
 
 public slots:
-    void updateBullet();
+    void updateEnemy();
 
 signals:
     void xChanged();
     void yChanged();
-    void bulletDestroyed(Bullet* bullet);
 
 private:
     double m_x;
     double m_y;
     double ySpeed;
-    QTimer bTime;
+    QTimer eTime;
+
 };
-#endif // BULLET_H
+#endif // ENEMY_H
