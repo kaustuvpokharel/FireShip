@@ -6,28 +6,53 @@ Controller::Controller(QObject* parent): m_x(1462/2), m_y(922-50), xSpeed(10), m
     connect(&time, &QTimer::timeout, this, &Controller::updateState);
     time.start(16); //60fps frame per second.
 
+    connect(&move, &QTimer::timeout, this, &Controller::updateMovement);
+    move.start(16); //60fps frame per second.
+
     connect(&startE, &QTimer::timeout, this, &Controller::createEnemy);
     startE.start(1000 + rand() % 2000); //1-3 seconds
 }
 
 void Controller::moveLeft()
 {
-    setX(m_x - xSpeed);
-    if(m_x < minX)
+    moveDirection = -1;
+    if(!move.isActive())
     {
-        setX(minX);
+        move.start();
     }
+
+    // setX(m_x - xSpeed);
+    // if(m_x < minX)
+    // {
+    //     setX(minX);
+    // }
 }
 
 void Controller::moveRight()
 {
+    moveDirection = 1;
+    if(!move.isActive())
     {
-        setX(m_x + xSpeed);
-        if(m_x > maxX)
-        {
-            setX(maxX);
-        }
+        move.start();
     }
+    // {
+    //     setX(m_x + xSpeed);
+    //     if(m_x > maxX)
+    //     {
+    //         setX(maxX);
+    //     }
+    // }
+}
+
+void Controller::stopMovement()
+{
+    moveDirection = 0;
+    move.stop();
+}
+
+QString Controller::showScore()
+{
+    return QString::number(score());
 }
 
 void Controller::applyThrust()
@@ -128,9 +153,25 @@ void Controller::checkCollision()
             {
                 deleteBullet(bullet);
                 deleteEnemy(enemy);
-
-                break;
+                setScore(score() + 10);
+                emit scoreChanged();
             }
         }
+    }
+}
+
+void Controller::updateMovement()
+{
+    if(moveDirection == -1 && m_x>minX)
+    {
+        setX(m_x - xSpeed);
+    }
+    if(moveDirection == 1 && m_x<maxX)
+    {
+        setX(m_x + xSpeed);
+    }
+    if(moveDirection == 0)
+    {
+        setX(m_x);
     }
 }

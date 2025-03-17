@@ -35,7 +35,33 @@ Window {
                                 control.fireBullet();
                            }
                        }
+
+        Keys.onReleased: (event) =>
+                         {
+                            if(event.key === Qt.Key_Left || event.key === Qt.Key_Right)
+                             {
+                                control.stopMovement()
+                             }
+                         }
     }
+
+    Text{
+        id: scoreBoard
+        text: "Score:" + control.showScore()
+        color: "black"
+        x: 50
+        y: 50
+
+        Connections
+        {
+            target: control
+            function onScoreChanged()
+            {
+                scoreBoard.text = "Score:" + control.showScore();
+            }
+        }
+    }
+
 
     Repeater
     {

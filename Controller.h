@@ -18,6 +18,7 @@ class Controller: public QObject
     Q_PROPERTY(double y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(QQmlListProperty<Bullet> bullets READ bullets NOTIFY bulletChanged)
     Q_PROPERTY(QQmlListProperty<Enemy> enemies READ enemies NOTIFY enemyChanged)
+    Q_PROPERTY(double score READ score WRITE setScore NOTIFY scoreChanged)
 
 public:
     Controller(QObject* parent = nullptr);
@@ -49,11 +50,27 @@ public:
         }
     }
 
+    double score()
+    {
+        return m_score;
+    }
+
+    void setScore(double value)
+    {
+        if(m_score != value)
+        {
+            m_score = value;
+            emit scoreChanged();
+        }
+    }
+
     Q_INVOKABLE void moveLeft();
     Q_INVOKABLE void moveRight();
     Q_INVOKABLE void applyThrust();
     Q_INVOKABLE void fireBullet();
     Q_INVOKABLE void createEnemy();
+    Q_INVOKABLE void stopMovement();
+    Q_INVOKABLE QString showScore();
 
 
     //This helps you expose our c++ objects or classes to qmls
@@ -72,12 +89,14 @@ public slots:
     void deleteBullet(Bullet* bullet);
     void deleteEnemy(Enemy *enemy);
     void checkCollision();
+    void updateMovement();
 
 signals:
     void xChanged();
     void yChanged();
     void bulletChanged();
     void enemyChanged();
+    void scoreChanged();
 
 private:
     double m_x; //current position of our rect on x dimension
@@ -93,6 +112,10 @@ private:
     QTimer startE;
     QList<Bullet*> bulletList;
     QList<Enemy*> enemyList;
+    QTimer move;
+
+    int moveDirection;
+    double m_score = 0;
 };
 
 #endif // CONTROLLER_H
