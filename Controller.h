@@ -71,6 +71,7 @@ public:
     Q_INVOKABLE void createEnemy();
     Q_INVOKABLE void stopMovement();
     Q_INVOKABLE QString showScore();
+    Q_INVOKABLE void restartGame();
 
 
     //This helps you expose our c++ objects or classes to qmls
@@ -97,6 +98,7 @@ signals:
     void bulletChanged();
     void enemyChanged();
     void scoreChanged();
+    void gameOver();
 
 private:
     double m_x; //current position of our rect on x dimension

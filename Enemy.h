@@ -10,8 +10,23 @@ class Enemy: public QObject
     Q_OBJECT
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(double y READ y WRITE setY NOTIFY yChanged)
+    Q_PROPERTY(int mIndex READ mIndex WRITE setIndex NOTIFY indexChanged)
 public:
     Enemy(QObject* parent = nullptr);
+
+    int mIndex()
+    {
+        return m_index;
+    }
+
+    void setIndex(int value)
+    {
+        if(m_index != value)
+        {
+            m_index = value;
+            emit indexChanged();
+        }
+    }
 
     double x()
     {
@@ -46,10 +61,12 @@ public slots:
 signals:
     void xChanged();
     void yChanged();
+    void indexChanged();
 
 private:
     double m_x;
     double m_y;
+    int m_index;
     double ySpeed;
     QTimer eTime;
 

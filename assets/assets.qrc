@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/enemy">
+        <file>enemy1.png</file>
+        <file>enemy2.png</file>
+        <file>enemy3.png</file>
+        <file>enemy4.png</file>
+        <file>enemy5.png</file>
+    </qresource>
+    <qresource prefix="/player">
+        <file>rocket.png</file>
+        <file>thruster.gif</file>
+    </qresource>
+    <qresource prefix="/bullet">
+        <file>bullet.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>Doto-Bold.ttf</file>
+    </qresource>
+</RCC>

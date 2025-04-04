@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 Window {
     width: 1512 //
@@ -6,72 +7,228 @@ Window {
     visible: true
     title: qsTr("Hello World")
 
-    Rectangle
+    FontLoader
     {
-        id: move1
-        width: 50
-        height: 50
-        color: "red"
-        x: control.x //50
-        y: control.y
-        focus: true
-
-        Keys.onPressed:(event) =>
-                       {
-                           if(event.key === Qt.Key_Left)
-                           {
-                                control.moveLeft()
-                           }
-                           if(event.key === Qt.Key_Right)
-                           {
-                                control.moveRight()
-                           }
-                           if(event.key === Qt.Key_Up)
-                           {
-                                control.applyThrust();
-                           }
-                           if(event.key === Qt.Key_Space)
-                           {
-                                control.fireBullet();
-                           }
-                       }
-
-        Keys.onReleased: (event) =>
-                         {
-                            if(event.key === Qt.Key_Left || event.key === Qt.Key_Right)
-                             {
-                                control.stopMovement()
-                             }
-                         }
+        id: pMedium
+        source: "qrc:/fonts/Doto-Bold.ttf"
     }
 
-    Text{
-        id: scoreBoard
-        text: "Score:" + control.showScore()
-        color: "black"
-        x: 50
-        y: 50
+    Rectangle
+    {
+        id: gameArea
+        anchors.fill: parent
+        visible: true
+        gradient: Gradient
+        {
+            GradientStop { position: 0.0; color: "#132330"}
+            GradientStop { position: 1.0; color: "black"}
+        }
+
+        Rectangle
+        {
+            id: gameOverOverlay
+            anchors.fill: parent
+            visible: false
+            color: "Black"
+            opacity: 0.8
+            z: 1001
+
+            ColumnLayout
+            {
+                anchors.centerIn: parent
+                spacing: 20
+                Text {
+                    id: gameOver
+                    text: qsTr("Game Over")
+                    color: "white"
+                }
+
+                RowLayout
+                {
+                    spacing: 20
+                    Rectangle
+                    {
+                        id: closeBtn
+                        width: 300
+                        height: 35
+                        color: "gray"
+                        radius: 20
+                        Text {
+                            text: qsTr("Close")
+                            color: "white"
+                            anchors.centerIn: parent
+                        }
+
+                        MouseArea
+                        {
+                            hoverEnabled: true
+
+                            anchors.fill: parent
+                            onEntered:
+                            {
+                                closeBtn.color = "blue"
+                            }
+
+                            onExited:
+                            {
+                                closeBtn.color = "gray"
+                            }
+
+                            onClicked:
+                            {
+                                Qt.quit();
+                            }
+                        }
+                    }
+                    Rectangle
+                    {
+                        id: restartBtn
+                        width: 300
+                        height: 35
+                        color: "gray"
+                        radius: 20
+                        Text {
+                            text: qsTr("Restart")
+                            color: "white"
+                            anchors.centerIn: parent
+                        }
+
+                        MouseArea
+                        {
+                            hoverEnabled: true
+
+                            anchors.fill: parent
+                            onEntered:
+                            {
+                                restartBtn.color = "blue"
+                            }
+
+                            onExited:
+                            {
+                                restartBtn.color = "gray"
+                            }
+
+                            onClicked:
+                            {
+                                control.restartGame();
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
 
         Connections
         {
             target: control
-            function onScoreChanged()
+            onGameOver:
             {
-                scoreBoard.text = "Score:" + control.showScore();
+                gameOverOverlay.visible = true;
             }
         }
-    }
+
+        Rectangle
+        {
+            id: move1
+            width: 85
+            height: 85
+            color: "Transparent"
+            x: control.x //50
+            y: control.y
+            focus: true
+
+            Image {
+                id: rocket
+                source: "qrc:/player/rocket.png"
+                width: 55
+                height: 55
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+            }
+
+            AnimatedImage
+            {
+                id: thruster
+                source: "qrc:/player/thruster.gif"
+                width: 30
+                height: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: rocket.bottom
+                playing: true
+            }
+
+            Keys.onPressed:(event) =>
+                           {
+                               if(event.key === Qt.Key_Left)
+                               {
+                                    control.moveLeft()
+                               }
+                               if(event.key === Qt.Key_Right)
+                               {
+                                    control.moveRight()
+                               }
+                               if(event.key === Qt.Key_Up)
+                               {
+                                    control.applyThrust();
+                               }
+                               if(event.key === Qt.Key_Space)
+                               {
+                                    control.fireBullet();
+                               }
+
+                               thruster.playing = true
+                           }
+
+            Keys.onReleased: (event) =>
+                             {
+                                if(event.key === Qt.Key_Left || event.key === Qt.Key_Right)
+                                 {
+                                    control.stopMovement()
+                                 }
+                                 thruster.playing = true
+                             }
+
+            Component.onCompleted:
+            {
+                move1.forceActiveFocus();
+                thruster.playing = true;
+            }
+        }
+
+        Text{
+            id: scoreBoard
+            text: "SCORE: " + control.showScore()
+            font.family: pMedium.font.family
+            font.weight: pMedium.font.weight
+            font.styleName: pMedium.font.styleName
+            font.pixelSize: 40
+            color: "white"
+            x: 50
+            y: 50
+
+            Connections
+            {
+                target: control
+                function onScoreChanged()
+                {
+                    scoreBoard.text = "SCORE: " + control.showScore();
+                }
+            }
+        }
 
 
-    Repeater
-    {
-        model: control.bullets
-        delegate: Bullet{}
-    }
+        Repeater
+        {
+            model: control.bullets
+            delegate: Bullet{}
+        }
 
-    Repeater
-    {
-        model: control.enemies
-        delegate: Enemy{}
+        Repeater
+        {
+            model: control.enemies
+            delegate: Enemy{}
+        }
     }
 }

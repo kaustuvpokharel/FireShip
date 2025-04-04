@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/enemy">
+        <file alias="enemy1">8zd6_tdpw_211015 [Converted]-04.png</file>
+        <file alias="enemy2">8zd6_tdpw_211015 [Converted]-05.png</file>
+        <file alias="enemy3">8zd6_tdpw_211015 [Converted]-06.png</file>
+        <file alias="enemy4">8zd6_tdpw_211015 [Converted]-07.png</file>
+        <file alias="enemy5">8zd6_tdpw_211015 [Converted]-08.png</file>
+    </qresource>
+</RCC>

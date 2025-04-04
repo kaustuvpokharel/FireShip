@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-Controller::Controller(QObject* parent): m_x(1462/2), m_y(922-50), xSpeed(10), minX(0), maxX(1462), bottomY(922-50)
+Controller::Controller(QObject* parent): m_x(1462/2), m_y(922-100), xSpeed(10), minX(0), maxX(1462), bottomY(922-100)
 {
     //&Controller
     connect(&time, &QTimer::timeout, this, &Controller::updateState);
@@ -55,6 +55,30 @@ QString Controller::showScore()
     return QString::number(score());
 }
 
+void Controller::restartGame()
+{
+    for(Enemy* e: enemyList)
+    {
+        delete e;
+    }
+    enemyList.clear();
+
+    for(Bullet* b: bulletList)
+    {
+        delete b;
+    }
+    bulletList.clear();
+
+    emit enemyChanged();
+    emit bulletChanged();
+
+    setX(1462/2);
+    setY(922-50);
+
+    emit xChanged();
+    emit yChanged();
+}
+
 void Controller::applyThrust()
 {
     ySpeed = maxThrust;
@@ -67,7 +91,7 @@ void Controller::applyThrust()
 void Controller::fireBullet()
 {
     Bullet* newBullet = new Bullet(this, this);
-    newBullet->setX(m_x+20);
+    newBullet->setX(m_x+35);
     newBullet->setY(m_y);
     bulletList.append(newBullet);
     emit bulletChanged();
@@ -97,6 +121,34 @@ void Controller::updateState()
 
     checkCollision();
 
+    for(Enemy* e : enemyList)
+    {
+        if(e->y() > bottomY)
+        {
+            emit gameOver();
+            qInfo()<< "Game Over";
+            return;
+        }
+
+        double enemyLeft = e->x();
+        double enemyRight = e->x() + 50;
+        double enemyTop = e->y();
+        double enemyBottom = e->y() + 50;
+
+        double playerLeft = m_x;
+        double playerRight = m_x + 50;
+        double playerTop = m_y;
+        double playerBottom = m_y + 50;
+
+        if(enemyRight > playerLeft && enemyLeft < playerRight &&
+            enemyTop < playerBottom && enemyBottom > playerTop)
+        {
+            emit gameOver();
+            qInfo()<< "Game Over";
+            return;
+        }
+    }
+
     emit yChanged();
 }
 
@@ -125,6 +177,7 @@ void Controller::deleteEnemy(Enemy *enemy)
         //this deletes the place inside list of the instance
         emit enemyChanged();
         qInfo()<<"enemy Destroyed";
+        //Debuging message
     }
 }
 
