@@ -15,5 +15,6 @@
     </qresource>
     <qresource prefix="/fonts">
         <file>Doto-Bold.ttf</file>
+        <file>Doto-ExtraBold.ttf</file>
     </qresource>
 </RCC>

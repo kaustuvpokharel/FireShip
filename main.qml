@@ -10,7 +10,7 @@ Window {
     FontLoader
     {
         id: pMedium
-        source: "qrc:/fonts/Doto-Bold.ttf"
+        source: "qrc:/fonts/Doto-ExtraBold.ttf"
     }
 
     Rectangle
@@ -39,8 +39,22 @@ Window {
                 spacing: 20
                 Text {
                     id: gameOver
-                    text: qsTr("Game Over")
+                    text: qsTr("Game Over\n " + control.showScore())
+                    font.family: pMedium.font.family
+                    font.weight: pMedium.font.weight
+                    font.styleName: pMedium.font.styleName
+                    font.pixelSize: 60
+                    Layout.alignment: Qt.AlignHCenter
                     color: "white"
+
+                    Connections
+                    {
+                        target: control
+                        function onScoreChanged()
+                        {
+                            gameOver.text = qsTr("Game Over\n " + control.showScore());
+                        }
+                    }
                 }
 
                 RowLayout
@@ -49,12 +63,16 @@ Window {
                     Rectangle
                     {
                         id: closeBtn
-                        width: 300
-                        height: 35
+                        width: 250
+                        height: 45
                         color: "gray"
                         radius: 20
                         Text {
                             text: qsTr("Close")
+                            font.family: pMedium.font.family
+                            font.weight: pMedium.font.weight
+                            font.styleName: pMedium.font.styleName
+                            font.pixelSize: 35
                             color: "white"
                             anchors.centerIn: parent
                         }
@@ -66,7 +84,7 @@ Window {
                             anchors.fill: parent
                             onEntered:
                             {
-                                closeBtn.color = "blue"
+                                closeBtn.color = "red"
                             }
 
                             onExited:
@@ -83,12 +101,16 @@ Window {
                     Rectangle
                     {
                         id: restartBtn
-                        width: 300
-                        height: 35
+                        width: 250
+                        height: 45
                         color: "gray"
                         radius: 20
                         Text {
                             text: qsTr("Restart")
+                            font.family: pMedium.font.family
+                            font.weight: pMedium.font.weight
+                            font.styleName: pMedium.font.styleName
+                            font.pixelSize: 35
                             color: "white"
                             anchors.centerIn: parent
                         }
@@ -100,7 +122,7 @@ Window {
                             anchors.fill: parent
                             onEntered:
                             {
-                                restartBtn.color = "blue"
+                                restartBtn.color = "green"
                             }
 
                             onExited:
@@ -111,13 +133,12 @@ Window {
                             onClicked:
                             {
                                 control.restartGame();
+                                gameOverOverlay.visible = false;
                             }
                         }
                     }
                 }
             }
-
-
         }
 
         Connections
@@ -204,7 +225,7 @@ Window {
             font.weight: pMedium.font.weight
             font.styleName: pMedium.font.styleName
             font.pixelSize: 40
-            color: "white"
+            color: "White"
             x: 50
             y: 50
 

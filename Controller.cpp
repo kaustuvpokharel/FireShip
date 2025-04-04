@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-Controller::Controller(QObject* parent): m_x(1462/2), m_y(922-100), xSpeed(10), minX(0), maxX(1462), bottomY(922-100)
+Controller::Controller(QObject* parent): m_x(1450/2), m_y(922-100), xSpeed(10), minX(0), maxX(1450), bottomY(922-100)
 {
     //&Controller
     connect(&time, &QTimer::timeout, this, &Controller::updateState);
@@ -75,6 +75,9 @@ void Controller::restartGame()
     setX(1462/2);
     setY(922-50);
 
+    setScore(0);
+    emit scoreChanged();
+
     emit xChanged();
     emit yChanged();
 }
@@ -101,7 +104,7 @@ void Controller::fireBullet()
 void Controller::createEnemy()
 {
     Enemy* newEnemy = new Enemy();
-    newEnemy->setX(rand() % 1512);
+    newEnemy->setX(rand() % 1450);
     newEnemy->setY(-50);
     enemyList.append(newEnemy);
 
